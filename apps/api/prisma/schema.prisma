@@ -1,0 +1,244 @@
+// ==========================================
+// Prisma Schema - BacTunis Database (SQLite)
+// ==========================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Models
+model Student {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password      String
+  firstName     String
+  lastName      String
+  birthDate     DateTime
+  grade         String    @default("BAC")
+  branch        String
+  school        String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  profile       StudentProfile?
+  schedules     Schedule[]
+  sessions      StudySession[]
+  conversations Conversation[]
+  documents     Document[]
+  checkIns        EmotionalCheckIn[]
+  refreshTokens   RefreshToken[]
+  timetableSlots  TimetableSlot[]
+
+  @@map("students")
+}
+
+model RefreshToken {
+  id          String   @id @default(uuid())
+  token       String   @unique
+  studentId   String
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+
+  @@map("refresh_tokens")
+}
+
+model StudentProfile {
+  id              String   @id @default(uuid())
+  studentId       String   @unique
+  student         Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  
+  learningStyle   String?
+  strengths       String   @default("[]")
+  weaknesses      String   @default("[]")
+  goals           String   @default("[]")
+  studyRhythm     String   @default("MODERATE")
+  stressLevel     Int      @default(5)
+  
+  updatedAt       DateTime @updatedAt
+
+  @@map("student_profiles")
+}
+
+model Schedule {
+  id          String   @id @default(uuid())
+  studentId   String
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  
+  title       String
+  description String?
+  type        String
+  subjectId   String?
+  subject     Subject? @relation(fields: [subjectId], references: [id])
+  startTime   DateTime
+  endTime     DateTime
+  recurring   Boolean  @default(false)
+  recurrence  String?
+  color       String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("schedules")
+}
+
+model Subject {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  nameAr      String
+  branches    String    @default("[]")
+  coefficient Int       @default(1)
+  
+  chapters    Chapter[]
+  schedules   Schedule[]
+  sessions    StudySession[]
+  timetableSlots TimetableSlot[]
+
+  @@map("subjects")
+}
+
+model Chapter {
+  id          String   @id @default(uuid())
+  subjectId   String
+  subject     Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  
+  title       String
+  titleAr     String
+  order       Int
+  duration    Int
+  difficulty  String   @default("MEDIUM")
+  content     String?
+  
+  exercises   Exercise[]
+  sessions    StudySession[]
+
+  @@map("chapters")
+}
+
+model Exercise {
+  id            String   @id @default(uuid())
+  chapterId     String
+  chapter       Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  
+  question      String
+  questionAr    String?
+  type          String
+  options       String   @default("[]")
+  correctAnswer String
+  explanation   String
+  explanationAr String?
+  difficulty    String   @default("MEDIUM")
+  
+  createdAt     DateTime @default(now())
+
+  @@map("exercises")
+}
+
+model Conversation {
+  id          String        @id @default(uuid())
+  studentId   String
+  student     Student       @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  
+  title       String        @default("Nouvelle conversation")
+  
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  messages    ChatMessage[]
+
+  @@map("conversations")
+}
+
+model ChatMessage {
+  id              String       @id @default(uuid())
+  conversationId  String
+  conversation    Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  
+  role            String
+  content         String
+  audioUrl        String?
+  
+  createdAt       DateTime     @default(now())
+
+  @@map("chat_messages")
+}
+
+model EmotionalCheckIn {
+  id          String   @id @default(uuid())
+  studentId   String
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  
+  state       String
+  note        String?
+  
+  createdAt   DateTime @default(now())
+
+  @@map("emotional_checkins")
+}
+
+model StudySession {
+  id          String    @id @default(uuid())
+  studentId   String
+  student     Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  
+  subjectId   String
+  subject     Subject   @relation(fields: [subjectId], references: [id])
+  chapterId   String?
+  chapter     Chapter?  @relation(fields: [chapterId], references: [id])
+  
+  startTime   DateTime
+  endTime     DateTime?
+  duration    Int       @default(0)
+  completed   Boolean   @default(false)
+  score       Int?
+  notes       String?
+  
+  createdAt   DateTime  @default(now())
+
+  @@map("study_sessions")
+}
+
+model Document {
+  id          String   @id @default(uuid())
+  studentId   String
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  
+  name        String
+  type        String
+  url         String
+  size        Int?
+  
+  summary     String?
+  keyPoints   String   @default("[]")
+  mindMap     String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("documents")
+}
+
+model TimetableSlot {
+  id          String   @id @default(uuid())
+  studentId   String
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  
+  subjectId   String
+  subject     Subject  @relation(fields: [subjectId], references: [id])
+  
+  dayOfWeek   Int      // 0=Lundi, 1=Mardi, 2=Mercredi, 3=Jeudi, 4=Vendredi, 5=Samedi
+  startTime   String   // "08:00"
+  endTime     String   // "09:00"
+  room        String?
+  teacher     String?
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("timetable_slots")
+}

@@ -1,0 +1,1 @@
+﻿Ceci est un document de test pour le bac tunisien. Il contient des exercices de mathematiques. Exercice 1: Calculer la derivee de f(x) = x^3 + 2x^2 - 5x + 1. Exercice 2: Resoudre l'equation 2x^2 - 3x + 1 = 0.

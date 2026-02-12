@@ -1,0 +1,12 @@
+Chapitre 1: Les dérivées
+
+La dérivée d'une fonction f en un point a est définie par:
+f'(a) = lim(h->0) [f(a+h) - f(a)] / h
+
+Règles de dérivation:
+- (x^n)' = n*x^(n-1)
+- (f+g)' = f' + g'
+- (fg)' = f'g + fg'
+- (f/g)' = (f'g - fg') / g^2
+
+Applications: études de fonctions, tangentes, extrema.
