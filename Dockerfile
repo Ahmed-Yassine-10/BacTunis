@@ -23,11 +23,14 @@ RUN npx tsc -p tsconfig.json
 # Create uploads directory
 RUN mkdir -p uploads
 
-# Remove devDependencies for smaller image
+# Remove devDependencies for smaller image (prisma stays in deps)
 RUN npm prune --production
+
+# Re-generate prisma client after prune
+RUN npx prisma generate
 
 # Expose port
 EXPOSE 3001
 
 # Push database schema and start
-CMD npx prisma db push --accept-data-loss && node dist/main
+CMD sh -c "npx prisma db push --accept-data-loss 2>&1 && echo 'DB ready' && node dist/main"
