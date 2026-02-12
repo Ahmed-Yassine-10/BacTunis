@@ -5,10 +5,7 @@ import {
     Plus,
     ChevronLeft,
     ChevronRight,
-    Clock,
-    Book,
-    Trash2,
-    Edit2
+    Trash2
 } from 'lucide-react';
 import { format, startOfWeek, addDays, isSameDay, addWeeks, subWeeks } from 'date-fns';
 import { fr } from 'date-fns/locale';
@@ -38,7 +35,6 @@ const scheduleTypes = [
 export default function Planning() {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [schedules, setSchedules] = useState<Schedule[]>([]);
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
     const [showModal, setShowModal] = useState(false);
     const [editingSchedule, setEditingSchedule] = useState<Schedule | null>(null);
     const [formData, setFormData] = useState({

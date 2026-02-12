@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { User, Mail, School, Calendar, Target, Brain, Save, Loader2, BookOpen, Clock, Award, TrendingUp, Sparkles } from 'lucide-react';
+import { User, Mail, School, Calendar, Target, Brain, Save, Loader2, BookOpen, Clock, Award } from 'lucide-react';
 import api from '../lib/api';
 import { useAuthStore } from '../stores/authStore';
 import toast from 'react-hot-toast';
@@ -20,7 +20,7 @@ const studyRhythms = [
 ];
 
 export default function Profile() {
-    const { user, setUser } = useAuthStore();
+    const { user } = useAuthStore();
     const [profile, setProfile] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);

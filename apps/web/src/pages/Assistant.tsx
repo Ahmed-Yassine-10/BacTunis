@@ -14,8 +14,7 @@ import {
     Paperclip,
     FileText,
     X,
-    Upload,
-    File
+    Upload
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';

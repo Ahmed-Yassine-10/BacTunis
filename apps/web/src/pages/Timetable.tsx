@@ -5,19 +5,16 @@ import {
     Clock,
     Plus,
     Trash2,
-    BookOpen,
     Sparkles,
     ChevronRight,
     Loader2,
     X,
-    GraduationCap,
     CalendarDays,
     Lightbulb,
     Layers,
     AlertCircle,
     ArrowRight,
     Target,
-    TrendingUp,
 } from 'lucide-react';
 import api from '../lib/api';
 import toast from 'react-hot-toast';
