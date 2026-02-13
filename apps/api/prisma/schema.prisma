@@ -12,6 +12,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// NOTE: Pour le dev local avec SQLite, change le provider en "sqlite"
+// et DATABASE_URL en "file:./dev.db" dans le .env
+
 // Models
 model Student {
   id            String    @id @default(uuid())

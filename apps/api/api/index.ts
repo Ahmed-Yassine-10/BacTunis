@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { AppModule } from '../src/app.module';
+import { execSync } from 'child_process';
 import express from 'express';
 
 const expressApp = express();
@@ -9,6 +10,19 @@ let appInitialized = false;
 
 async function initApp() {
     if (appInitialized) return;
+
+    // Auto-push database schema on first cold start
+    try {
+        console.log('Pushing database schema...');
+        execSync('npx prisma db push --accept-data-loss --skip-generate', {
+            cwd: __dirname + '/..',
+            stdio: 'inherit',
+            timeout: 25000,
+        });
+        console.log('Database schema pushed successfully');
+    } catch (e) {
+        console.error('Warning: prisma db push failed, tables may already exist:', e);
+    }
 
     const app = await NestFactory.create(AppModule, new ExpressAdapter(expressApp), {
         logger: ['error', 'warn', 'log'],
