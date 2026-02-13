@@ -1,0 +1,18 @@
+{
+    "version": 2,
+    "buildCommand": "npx prisma generate && npx tsc -p tsconfig.json",
+    "installCommand": "npm install --include=dev",
+    "functions": {
+        "api/index.ts": {
+            "memory": 1024,
+            "maxDuration": 30,
+            "includeFiles": "prisma/**"
+        }
+    },
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "/api/index.ts"
+        }
+    ]
+}
