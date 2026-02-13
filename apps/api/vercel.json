@@ -10,7 +10,31 @@
             "includeFiles": "prisma/**"
         }
     },
+    "headers": [
+        {
+            "source": "/(.*)",
+            "headers": [
+                { "key": "Access-Control-Allow-Origin", "value": "*" },
+                { "key": "Access-Control-Allow-Methods", "value": "GET,POST,PUT,PATCH,DELETE,OPTIONS" },
+                { "key": "Access-Control-Allow-Headers", "value": "Content-Type,Authorization,Accept" },
+                { "key": "Access-Control-Allow-Credentials", "value": "true" }
+            ]
+        }
+    ],
     "routes": [
+        {
+            "src": "/(.*)",
+            "methods": ["OPTIONS"],
+            "dest": "/api/index.ts",
+            "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET,POST,PUT,PATCH,DELETE,OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type,Authorization,Accept",
+                "Access-Control-Allow-Credentials": "true",
+                "Access-Control-Max-Age": "86400"
+            },
+            "status": 204
+        },
         {
             "src": "/(.*)",
             "dest": "/api/index.ts"
