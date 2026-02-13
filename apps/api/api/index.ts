@@ -78,6 +78,3 @@ export default async function handler(req: any, res: any) {
     await initApp();
     expressApp(req, res);
 }
-    await initApp();
-    expressApp(req, res);
-}
